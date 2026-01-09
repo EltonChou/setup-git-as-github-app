@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Test Setup Git as GitHub App
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup Git as GitHub App
         id: setup-git
         uses: EltonChou/setup-git-as-github-app@main
@@ -19,14 +22,27 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Verify Git configuration
         run: |
           echo "Checking Git configuration..."
-          git config --global user.name
-          git config --global user.email
+          USER_NAME=$(git config --local user.name)
+          USER_EMAIL=$(git config --local user.email)
 
-          echo "Installation ID: ${{ steps.setup-git.outputs.installation-id }}"
+          echo "User name: $USER_NAME"
+          echo "User email: $USER_EMAIL"
+
+          # Check if user name contains [bot]
+          if [[ ! "$USER_NAME" =~ \[bot\] ]]; then
+            echo "Error: User name does not contain [bot]"
+            exit 1
+          fi
+
+          # Check if email contains noreply
+          if [[ ! "$USER_EMAIL" =~ noreply ]]; then
+            echo "Error: Email does not contain noreply"
+            exit 1
+          fi
+
+          echo "✓ User name contains [bot]"
+          echo "✓ Email contains noreply"
           echo "Token generated successfully!"
