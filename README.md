@@ -40,7 +40,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Git as GitHub App
-        uses: EltonChou/setup-git-as-github-app@main
+        uses: EltonChou/setup-git-as-github-app@v1
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -69,7 +69,7 @@ jobs:
 
       - name: Setup Git as GitHub App
         id: git-setup
-        uses: EltonChou/setup-git-as-github-app@main
+        uses: EltonChou/setup-git-as-github-app@v1
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
