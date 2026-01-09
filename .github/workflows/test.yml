@@ -1,0 +1,32 @@
+name: Test Action
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test Setup Git as GitHub App
+    steps:
+      - name: Setup Git as GitHub App
+        id: setup-git
+        uses: EltonChou/setup-git-as-github-app@main
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Git configuration
+        run: |
+          echo "Checking Git configuration..."
+          git config --global user.name
+          git config --global user.email
+
+          echo "Installation ID: ${{ steps.setup-git.outputs.installation-id }}"
+          echo "Token generated successfully!"
